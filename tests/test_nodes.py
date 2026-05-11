@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import pytest
+
 from langgraph_agent_lab.nodes import (
     answer_node,
     ask_clarification_node,
@@ -16,7 +17,6 @@ from langgraph_agent_lab.nodes import (
     tool_node,
 )
 from langgraph_agent_lab.state import Route
-
 
 # ---------------------------------------------------------------------------
 # intake_node

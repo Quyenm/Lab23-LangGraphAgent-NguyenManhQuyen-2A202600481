@@ -7,7 +7,6 @@ scenario_metrics must have >= 6 entries to pass validation.
 from __future__ import annotations
 
 import json
-import time
 from pathlib import Path
 from statistics import mean
 from typing import Any
