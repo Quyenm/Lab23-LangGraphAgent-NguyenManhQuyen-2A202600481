@@ -3,8 +3,7 @@
 ## 1. Team / student
 
 - Name: Nguyễn Mạnh Quyền 
-- Repo/commit:
-- Date:
+- Date: 2026-05-11
 
 ## 2. Architecture
 
