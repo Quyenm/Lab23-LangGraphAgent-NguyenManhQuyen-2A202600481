@@ -66,7 +66,7 @@ def run_scenarios(
 def _demo_crash_resume(graph: object, scenarios: list) -> bool:
     """Simulate crash by running first half, then resume from checkpoint."""
     try:
-        from .state import Scenario, Route, initial_state as mk
+        from .state import initial_state as mk
         scenario = next((s for s in scenarios if s.should_retry), None)
         if not scenario:
             return False
@@ -88,7 +88,8 @@ def validate_metrics(metrics: Annotated[Path, typer.Option("--metrics")]) -> Non
     report = MetricsReport.model_validate(payload)
     if report.total_scenarios < 6:
         raise typer.BadParameter("Expected at least 6 scenarios")
-    typer.echo(f"Metrics valid. success_rate={report.success_rate:.2%}  total={report.total_scenarios}")
+    rate = f"{report.success_rate:.2%}"
+    typer.echo(f"Metrics valid. success_rate={rate}  total={report.total_scenarios}")
 
 
 @app.command("show-history")

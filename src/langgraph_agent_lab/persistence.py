@@ -12,10 +12,9 @@ after a crash to demonstrate crash-resume recovery.
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any
 
 
-def build_checkpointer(kind: str = "memory", database_url: str | None = None) -> Any | None:
+def build_checkpointer(kind: str = "memory", database_url: str | None = None) -> object | None:
     """Return a LangGraph checkpointer instance.
 
     Args:
@@ -35,6 +34,7 @@ def build_checkpointer(kind: str = "memory", database_url: str | None = None) ->
     if kind == "sqlite":
         try:
             import sqlite3
+
             from langgraph.checkpoint.sqlite import SqliteSaver
         except ImportError as exc:
             raise RuntimeError(

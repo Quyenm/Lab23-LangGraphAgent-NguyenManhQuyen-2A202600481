@@ -12,7 +12,6 @@ import os
 
 from .state import AgentState, ApprovalDecision, Route, make_event
 
-
 # ---------------------------------------------------------------------------
 # Intake & Classification
 # ---------------------------------------------------------------------------
@@ -97,12 +96,17 @@ def answer_node(state: AgentState) -> dict:
         else:
             answer = f"Based on lookup results: {last_result}"
     else:
-        answer = f"Answer to '{query[:60]}': This is a direct response that does not require tool use."
+        answer = (
+            f"Answer to '{query[:60]}': This is a direct response"
+            " that does not require tool use."
+        )
 
     return {
         "final_answer": answer,
         "messages": [f"answer: {answer[:80]}"],
-        "events": [make_event("answer", "completed", "final answer generated", grounded=bool(tool_results))],
+        "events": [
+            make_event("answer", "completed", "final answer generated", grounded=bool(tool_results))
+        ],
     }
 
 
@@ -126,7 +130,9 @@ def tool_node(state: AgentState) -> dict:
         return {
             "tool_results": [result],
             "errors": [f"tool transient failure attempt={attempt}"],
-            "events": [make_event("tool", "error", f"transient failure attempt={attempt}", attempt=attempt)],
+            "events": [
+                make_event("tool", "error", f"transient failure attempt={attempt}", attempt=attempt)
+            ],
         }
 
     result = f"tool-ok:scenario={scenario_id}:attempt={attempt}:query={state.get('query', '')[:40]}"
@@ -210,9 +216,15 @@ def ask_clarification_node(state: AgentState) -> dict:
     """
     query = state.get("query", "").lower()
     if "it" in query.split() or "this" in query.split():
-        question = "Could you clarify what 'it' refers to? Please provide the order ID, account number, or specific item."
+        question = (
+            "Could you clarify what 'it' refers to? "
+            "Please provide the order ID, account number, or specific item."
+        )
     else:
-        question = "Could you provide more context? For example: order ID, account number, or the specific action you need."
+        question = (
+            "Could you provide more context? "
+            "For example: order ID, account number, or the specific action you need."
+        )
 
     return {
         "pending_question": question,

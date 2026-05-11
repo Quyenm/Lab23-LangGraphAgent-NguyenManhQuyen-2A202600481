@@ -11,7 +11,6 @@ Design decisions:
 
 from __future__ import annotations
 
-import time
 from enum import StrEnum
 from operator import add
 from typing import Annotated, Any, TypedDict
@@ -121,7 +120,7 @@ def initial_state(scenario: Scenario) -> AgentState:
     }
 
 
-def make_event(node: str, event_type: str, message: str, **metadata: Any) -> dict[str, Any]:
+def make_event(node: str, event_type: str, message: str, **metadata: object) -> dict[str, Any]:
     """Create a normalized event payload."""
     return LabEvent(
         node=node,

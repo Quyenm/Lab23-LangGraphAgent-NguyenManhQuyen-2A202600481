@@ -12,12 +12,24 @@ def render_report(metrics: MetricsReport) -> str:
     """Render a complete lab report markdown from metrics."""
     scenario_rows = "\n".join(
         f"| {m.scenario_id} | {m.expected_route} | {m.actual_route} | "
-        f"{'✅' if m.success else '❌'} | {m.retry_count} | {m.interrupt_count} | {m.latency_ms}ms |"
+        f"{'✅' if m.success else '❌'} | {m.retry_count} | "
+        f"{m.interrupt_count} | {m.latency_ms}ms |"
         for m in metrics.scenario_metrics
     )
 
     error_scenarios = [m for m in metrics.scenario_metrics if m.retry_count > 0]
     approval_scenarios = [m for m in metrics.scenario_metrics if m.approval_required]
+
+    retry_text = (
+        f"Scenarios demonstrating retry: {', '.join(m.scenario_id for m in error_scenarios)}"
+        if error_scenarios
+        else "No retry scenarios."
+    )
+    approval_text = (
+        f"Scenarios requiring approval: {', '.join(m.scenario_id for m in approval_scenarios)}"
+        if approval_scenarios
+        else "No risky scenarios."
+    )
 
     return f"""# Day 08 Lab Report — LangGraph Agent Orchestration
 
@@ -114,7 +126,7 @@ inspect list position, which is fragile.
 
 ### 5.1 Transient tool failure (retry loop)
 
-{f"Scenarios demonstrating retry: {', '.join(m.scenario_id for m in error_scenarios)}" if error_scenarios else "No retry scenarios."}
+{retry_text}
 
 The `tool_node` simulates a transient failure when `route == error AND attempt < 2`.
 The retry loop is: `tool → evaluate → retry → tool` and is bounded by `max_attempts`.
@@ -126,7 +138,7 @@ After `attempt >= max_attempts`, `route_after_retry` returns `dead_letter` inste
 
 ### 5.2 Risky action without approval
 
-{f"Scenarios requiring approval: {', '.join(m.scenario_id for m in approval_scenarios)}" if approval_scenarios else "No risky scenarios."}
+{approval_text}
 
 `risky_action_node` prepares the action and `approval_node` blocks execution until
 approved. In mock mode (CI), auto-approved. With `LANGGRAPH_INTERRUPT=true`, the graph
