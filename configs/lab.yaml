@@ -1,0 +1,5 @@
+scenarios_path: data/sample/scenarios.jsonl
+checkpointer: sqlite
+database_url: outputs/checkpoints.db
+demo_resume: true
+report_path: reports/lab_report.md
